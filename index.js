@@ -11,9 +11,13 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  'mongodb+srv://az_better_ecom:az_better_ecom@cluster0.ujcbv.mongodb.net/barcode_scanner?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('Error: MONGODB_URI is not defined in environment variables');
+  console.error('Please create a .env file with MONGODB_URI');
+  process.exit(1);
+}
 
 mongoose
   .connect(MONGODB_URI)
@@ -22,6 +26,7 @@ mongoose
   })
   .catch((error) => {
     console.error('MongoDB connection error:', error);
+    process.exit(1);
   });
 
 // Routes
